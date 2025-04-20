@@ -253,3 +253,27 @@ app.add_handler(CallbackQueryHandler(handle_match_click, pattern=r'^match_'))
 app.add_handler(CallbackQueryHandler(handle_confirm_match, pattern=r'^confirm_'))
 
 app.run_polling()
+
+
+from telegram import BotCommand
+
+async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("📩 برای پشتیبانی، با ادمین در تماس باشید.")
+
+async def setup_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if update.effective_user.id == ADMIN_ID:
+        await update.message.reply_text("⚙️ تنظیمات انجام شد.")
+    else:
+        await update.message.reply_text("⛔ فقط مدیر اجازه دارد این دستور را اجرا کند.")
+
+async def set_commands(app):
+    await app.bot.set_my_commands([
+        BotCommand("start", "شروع بات و انتخاب نقش"),
+        BotCommand("help", "راهنما و تماس با پشتیبانی"),
+        BotCommand("setup", "تنظیمات اولیه (فقط برای مدیر)")
+    ])
+
+# اضافه کردن هندلرها و منو به ربات
+app.add_handler(CommandHandler("help", help_command))
+app.add_handler(CommandHandler("setup", setup_command))
+app.post_init = set_commands
