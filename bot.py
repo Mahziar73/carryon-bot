@@ -256,11 +256,12 @@ app.run_polling()
 
 
 from telegram import BotCommand
+from telegram.ext import CommandHandler
 
-async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def help_command(update, context):
     await update.message.reply_text("📩 برای پشتیبانی، با ادمین در تماس باشید.")
 
-async def setup_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def setup_command(update, context):
     if update.effective_user.id == ADMIN_ID:
         await update.message.reply_text("⚙️ تنظیمات انجام شد.")
     else:
@@ -273,7 +274,9 @@ async def set_commands(app):
         BotCommand("setup", "تنظیمات اولیه (فقط برای مدیر)")
     ])
 
-# اضافه کردن هندلرها و منو به ربات
+@app.on_startup
+async def init_menu(app):
+    await set_commands(app)
+
 app.add_handler(CommandHandler("help", help_command))
 app.add_handler(CommandHandler("setup", setup_command))
-app.post_init = set_commands
