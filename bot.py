@@ -46,6 +46,7 @@ def get_next_group_id():
 
 # شروع
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    context.user_data.clear()
     keyboard = [
         [InlineKeyboardButton("✈️ مسافر", callback_data='role_traveler')],
         [InlineKeyboardButton("📦 فرستنده", callback_data='role_sender')],
